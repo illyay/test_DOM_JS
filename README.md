@@ -1,34 +1,19 @@
-# При звертанні до curl.php, вказуємо змінні GET
-* method= p - POST, g - GET 
-* form= y - відправка форми, n - без форми
-* formdata[ключ без скобок]= змінна (необмежена кількість) - передача input
-* dest= http://yousite.com/ - лінк до якого будемо звертатись
-* cookie= my=123 - передача cookie
+# 1.html
+Тут відображено сторінку, яка створена при допомозі DOM jQuery. 
+---У поле URL вставляйте http://test.ihousesmart.com/enter1.php ---
+*Усі 5 кукі поля, перевіряються регулярним виразом.
+*Заповніть 5 полей і натисність склеїти кукі.
+*Після цього вони відобразяться Вам на екрані.
 
-Відправка cUrl на http://test.ihousesmart.com/enter.php ,отримуємо у відповідь: 
-# Відправляємо GET:
-GET /curl.php?method=g&amp;form=y&amp;formdataname=hi&amp;formdatadescription=mynameis&amp;dest=http://test.ihousesmart.com/enter.php&amp;cookie=my=123 HTTP/1.1
-Host: test.ihousesmart.com
-Cache-Control: no-cache
-Postman-Token: bf858aa0-0acb-429a-a522-264d694b39c9
+*Наступним кроком заповніть поля та виберіть метод надсилання данних (POST, GET)
+*Натисніть відправити форму і AJAX відобразить дані, які отримано від curl, який був створений на 1му завданні та відобразить під формою.
 
-# Відповідь:
-cookie: 123
-method: GET
-name: hi
-description: mynameis
-
-# Відправляємо POST:
-POST /curl.php?method=p&amp;form=y&amp;formdataname=hi&amp;formdatadescription=mynameis&amp;dest=http://test.ihousesmart.com/enter.php&amp;cookie=my=123 HTTP/1.1
-Host: test.ihousesmart.com
-Cache-Control: no-cache
-Postman-Token: bc0230b4-797a-a399-6848-bf7e8030f246
-Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
-
-# Відповідь:
-cookie: 123
-method: POST
-name: hi
-description: mynameis
+# 2.html
+Тут відображено сторінку, яка створена при допомозі DOM jQuery. 
+---У поле URL вставляйте http://test.ihousesmart.com/enter1.php ---
+*Усі 5 кукі поля, видалив.
+*Випадаючий список видалив для вибору методу надсилання.
+*Перший iframe надсилається при допомозі AJAX GET методом.
+*Другий iframe надсилається при допомозі FORM POST методом.
 
 
