@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>two</title>
+	<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+</head>
+<body>
+
+<iframe id="first" sandbox="allow-scripts allow-forms allow-same-origin" src="1.html"></iframe>
+<iframe id="second" sandbox="allow-same-origin allow-forms allow-scripts" src=""></iframe>
+
+<script>
+$(function() {
+	var iframe_first = $('#first');
+	var iframe_second = $('#second');
+	$(iframe_first).load(function(){ //після повного завантаження iframe "first"
+	  	$(iframe_first).contents().find("#divcookiesAllBlock").remove(); //видалити блок #divcookiesAllBlock із iframe "first"
+	  	$(iframe_first).contents().find("#method").remove(); //видалити випадаючий список #method із iframe "first"
+
+		var iframe_first_body = $(iframe_first).contents().find("body").html(); //все, що є у iframe "first", зберегти у змінну iframe_first_body
+	  	$(iframe_second).contents().find("body").html(iframe_first_body); //переносимо данні із first у second
+
+	  	var myform = $("<form/>", { //створюємо форму 
+	  		id: 'MyForm',
+		  	action: '/', 
+		  	method: 'POST'
+		}).appendTo($(iframe_second).contents().find("#content")); //додаємо її у блок контент
+
+		var divform = $(iframe_second).contents().find("#divform").html(); //все, що є у iframe "second" в блоці #divform, зберегти у змінну divform
+		$(iframe_second).contents().find("#divform").remove(); //видалити у iframe "second" блок #divform
+		$(iframe_second).contents().find("#MyForm").html(divform); // переносимо все із змінної divform у форму попередньо створену
+		$(iframe_second).contents().find("#SendBtn").remove(); //видалити кнопку для відправки форми по ajax
+
+		$('<input/>', { //створюємо кнопку input в формі
+		    type: 	'submit',
+		    name: 	'send',
+		    val: 	'Send form' 
+		}).appendTo(myform); //додаємо кнопку у форму
+
+		$($(iframe_second).contents().find("#url")).bind('keyup keypress', function() { //перевірка натискання, або відпускання клавіш у iframe second в input #url
+	     $($(iframe_second).contents().find("#MyForm")).attr('action', $(iframe_second).contents().find("#url").val()); //якщо ввід данних у поле було проведено, тоді автоматично змінювати action у формі, для відправки форми на сервер
+		});
+	});
+});
+</script>
+
+
+</body>
+
+</html>

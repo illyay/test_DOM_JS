@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>one</title>
+</head>
+<body>
+<div id="content"></div>
+<div id="ajax_echo"></div>
+</body>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+<script>
+	$(function() {
+		function div(id, block) { //створення div (функція) [1 - параметр id блока, 2 - параметр якщо потрібно його вставити в якійсь інший блок, якщо ні то залишаємо пустий параметр]
+			var div = $('<div/>', {
+			    id: 'div'+id
+			});
+			if(block == '')
+				$('#content').append(div);
+			else
+				$('#'+block).append(div);
+		}
+		function input(id, placeholder) { //функція для створення поля для вводу тексту [1 - блок куди вставити, 2 - якщо потрібно, то опис поки поле пусте]
+			var input = $('<input/>', {
+		        id:     id,
+		        name: 	id,
+		        type: 	'text',
+		        placeholder: placeholder,
+		        val: 	''
+		    });
+			$('#div'+id).append(input);
+		}
+		function a(id, text) { //функція для вставки тегу "а" [1 - айді блоку, куди вставляємо, 2 - текст, який розмістимо в блоці]
+			var a = $("<a/>", {
+				id: 'a'+id,
+	    		text: text
+	    	});
+			$('#div'+id).append(a);
+		}
+		function span(id, text) { //функція для вставки тегу "span" [1 - айді блоку, куди вставляємо, 2 - текст, який розмістимо в блоці]
+			var span = $("<span/>", {
+				id: 'span'+id,
+	    		text: text
+	    	});
+			$('#'+id).append(span);
+		}
+		function button(id, inid, text) { //функція для вставки кнопки [1 - айді блоку, 2 - айді в який блок ставляємо, 3 - текст, який розмістимо в блоці]
+			var button = $('<button/>', {
+			    id: id,
+			    text: text
+			});
+			$('#'+inid).append(button);
+		}
+		function select(id) { //функція для вставки випадаючого списку, тут тільки передаємо айді блоку, як буде називатись випадаючий список
+			var myselect = $('<select/>', { id: id, name: id});
+			var items = ["GET","POST"]; //пункти випадаючого списку
+			//Наполняем список
+			$.each(items,function() {
+				if(this == 'GET')
+					val = 'g';
+				if(this == 'POST')
+					val = 'p';
+				$('<option/>', {
+					val:  val,
+					text: this
+				}).appendTo(myselect);
+			});
+			$('option[value="g"]', myselect).attr('selected', 'selected'); //робимо перший пункт вибраним
+			$('#divform').append(myselect);
+		}
+		div('cookiesAllBlock', ''); //створюємо блок для печеньок
+		for(i=1; i<=5; i++){ // створюємо 5 полів для вводу печеньок
+			div('cookie'+i, 'divcookiesAllBlock'); //створити div
+			input('cookie'+i, 'Печенька '+i); //створити в div поле input
+		}
+		div('cookiesAll', 'divcookiesAllBlock'); //створюємо блок для склеєних куків
+		a('cookiesAll', 'Cookies: '); //пишемо надпис, що це куки
+		span('acookiesAll', ''); //виводимо кукі тут склеєні
+		div('cookiesBtn', 'divcookiesAllBlock'); //блок для кнопки
+		button('cookiesBtn', 'divcookiesBtn', 'Bind cookies'); //створюємо кнопку для склеювання куків і занечення в span
+		/////////
+
+		div('form', ''); //створюємо блок div
+		for(i=1; i<=8; i++){ //генеруємо 8 полей для вводу наших данних і 1 випадающий список
+			switch (i) { 
+				case 1: 
+					select('method'); //вивід випадаючого списку
+					break;
+				case 2: 
+					div('url', 'divform');
+					input('url', 'Url');
+					break;
+				case 3: 
+					div('first', 'divform');
+					input('first', 'First');
+					break;		
+				case 4: 
+					div('last', 'divform');
+					input('last', 'Last');
+					break;
+				case 5: 
+					div('birthday', 'divform');
+					input('birthday', 'Birthday');
+					break;
+				case 6: 
+					div('gender', 'divform');
+					input('gender', 'Gender');
+					break;		
+				case 7: 
+					div('age', 'divform');
+					input('age', 'Age');
+					break;	
+				case 8: 
+					div('phone', 'divform');
+					input('phone', 'Phone');
+					break;
+			}
+		}
+		div('SendBtn', 'divform'); //блок для кнопки
+		button('SendBtn', 'divSendBtn', 'Send form'); //кнопка для відправки форми на сервер по ajax
+		////////
+		$('input[name*="cookie"]').bind('keyup keypress', function() { //якщо була натиснута, або відпущена клавіша в полях кукі, тоді перевірити на правильність вводу даних
+	     this.value = this.value.replace(/[^A-Za-z]/g, ''); //перевірка і заміна тексту регуляркою, доступний ввід тільки лат букв (великі та малі)
+		});
+		///////////
+		$('#cookiesBtn').on('click', function(){ //при натисканні кнопки, склеїти кукі, виконати функцію
+			var cookiesAll = ''; //створюємо змінну
+			for(i=1; i<=5; i++){ //перевірити всі 5 полей
+				var cookiesAll = cookiesAll+$('#cookie'+i).val(); //склеїти кожне поле у одну змінну
+			}
+			
+			$('#spanacookiesAll').text(cookiesAll); //вивід куків в поле span
+		});
+		////////////
+		$('#SendBtn').on('click', function(){ //при натисканні клавіші відправки форми, відправити форму при допомозі ajax методом GET
+			$.ajax( {
+			  type: "GET",
+			  url: 'http://test.ihousesmart.com/curl.php', //наш попередній скрипт із 1го завдання "curl"
+			  data: {
+			  	dest: $('#url').val(),
+			  	form: 'y',
+			  	method: $('#method option:selected').val(),
+			  	cookie: 'my='+$('#spanacookiesAll').text(),
+			  	formdatafirst: $('#first').val(),
+			  	formdatalast: $('#last').val(),
+			  	formdatabirthday: $('#birthday').val(),
+			  	formdatagender: $('#gender').val(),
+			  	formdataage: $('#age').val(),
+			  	formdataphone: $('#phone').val()
+			  },     
+			  success: function( response ) {
+			    console.log( response );
+			    $('#ajax_echo').html('Відповідь із сервера: </br>'+response) //якщо все добре, тоді повертаємо відповідь із сервера
+			  }
+			});
+		});
+	});
+	
+
+	
+</script>
+</html>
